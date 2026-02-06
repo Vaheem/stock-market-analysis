@@ -8,6 +8,12 @@ An automated data engineering pipeline that tracks the top tech stocks, performs
 
 ---
 
+## 🚀 Live Demo
+
+**[View Live Dashboard](https://stock-market-analysis.duckdns.org)** 📊
+
+---
+
 ## Project Overview
 
 This project demonstrates a **production-ready data engineering pipeline** that:
