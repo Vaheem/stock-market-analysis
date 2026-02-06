@@ -1,0 +1,147 @@
+services:
+  # ==============================
+  # PostgreSQL (Stock Data)
+  # ==============================
+  postgres:
+    image: postgres:15
+    container_name: stock_db
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
+    networks:
+      - stock_network
+
+  # ==============================
+  # PostgreSQL (Airflow Metadata)
+  # ==============================
+  airflow-db:
+    image: postgres:15
+    container_name: airflow_db
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - airflow_db_data:/var/lib/postgresql/data
+    networks:
+      - stock_network
+
+  # ==============================
+  # Airflow Init (ONE-SHOT)
+  # ==============================
+  airflow-init:
+    image: apache/airflow:2.7.1
+    depends_on:
+      - airflow-db
+    env_file:
+      - .env
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-db/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+    command:
+      - bash
+      - -c
+      - |
+        airflow db migrate &&
+        airflow users create \
+          --username "$AIRFLOW_USER" \
+          --password "$AIRFLOW_PASSWORD" \
+          --firstname Admin \
+          --lastname User \
+          --role Admin \
+          --email admin@example.com
+    restart: "no"
+    networks:
+      - stock_network
+
+  # ==============================
+  # Airflow Webserver
+  # ==============================
+  airflow-webserver:
+    image: apache/airflow:2.7.1
+    container_name: airflow_webserver
+    depends_on:
+      - airflow-db
+      - airflow-init
+    env_file:
+      - .env
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-db/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__WEBSERVER__SECRET_KEY: my_secret_key_12345
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./scripts:/opt/airflow/scripts
+      - ./logs:/opt/airflow/logs
+    ports:
+      - "8080:8080"
+    command: webserver
+    networks:
+      - stock_network
+
+  # ==============================
+  # Airflow Scheduler
+  # ==============================
+  airflow-scheduler:
+    image: apache/airflow:2.7.1
+    container_name: airflow_scheduler
+    depends_on:
+      - airflow-db
+      - airflow-init
+    env_file:
+      - .env
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-db/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./scripts:/opt/airflow/scripts
+      - ./logs:/opt/airflow/logs
+    command: scheduler
+    networks:
+      - stock_network
+
+  # ==============================
+  # Streamlit Dashboard
+  # ==============================
+  streamlit:
+    image: python:3.9
+    container_name: stock_dashboard
+    depends_on:
+      - postgres
+    working_dir: /app
+    env_file:
+      - .env
+    volumes:
+      - ./dashboard:/app/dashboard
+      - ./scripts:/app/scripts
+      - ./.env:/app/.env
+    ports:
+      - "8501:8501"
+    command: >
+      bash -c "pip install streamlit plotly python-dotenv psycopg2-binary pandas matplotlib &&
+               streamlit run dashboard/app.py --server.address=0.0.0.0"
+    networks:
+      - stock_network
+
+volumes:
+  postgres_data:
+  airflow_db_data:
+
+networks:
+  stock_network:
+    driver: bridge
