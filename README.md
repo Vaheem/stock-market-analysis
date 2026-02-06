@@ -206,8 +206,8 @@ This project is open source and available under the MIT License.
 ## Author
 
 **Your Name**
-- GitHub: [@yourusername](https://github.com/Vaheem)
-- LinkedIn: [Your Profile](https://www.linkedin.com/in/vahe-eminyan-3719782a3/)
+- GitHub: [@Vaheem](https://github.com/Vaheem)
+- LinkedIn: [vahe-eminyan](https://www.linkedin.com/in/vahe-eminyan-3719782a3/)
 
 ---
 
