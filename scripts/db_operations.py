@@ -8,11 +8,11 @@ load_dotenv()
 
 # Database Configuration
 DB_CONFIG = {
-    'host': os.getenv('POSTGRES_HOST', 'localhost'),
-    'database': os.getenv('POSTGRES_DB'),
-    'user': os.getenv('POSTGRES_USER'),
-    'password': os.getenv('POSTGRES_PASSWORD'),
-    'port': os.getenv('POSTGRES_PORT', '5432')
+    "host": os.getenv("POSTGRES_HOST", "stock_db"),
+    "database": os.getenv("POSTGRES_DB"),
+    "user": os.getenv("POSTGRES_USER"),
+    "password": os.getenv("POSTGRES_PASSWORD"),
+    "port": int(os.getenv("POSTGRES_PORT", 5432)),
 }
 
 

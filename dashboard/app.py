@@ -25,7 +25,7 @@ st.set_page_config(
 # Title
 st.title("📈 Tech Stock Market Analytics ")
 st.markdown("""
-**Automated Pipeline:** Daily stock data collection & analysis | Data collection started: Feb 4, 2026 \n
+**Automated Pipeline:** Daily stock data collection & analysis | Data collection started: Feb 5, 2026 \n
 **Stocks Tracked:** NVDA, GOOG, AAPL, MSFT, AMZN, META, TSM, NFLX, TSLA, AVGO  \n
 **Update Schedule:** Every day at 22:00 UTC (after US market close)
 """)
