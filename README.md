@@ -8,12 +8,6 @@ An automated data engineering pipeline that tracks the top tech stocks, performs
 
 ---
 
-## Live Demo
-
-**[View Live Dashboard](https://stock-market-analysis.duckdns.org)** 
-
----
-
 ## Project Overview
 
 This project demonstrates a **production-ready data engineering pipeline** that:
@@ -27,20 +21,48 @@ This project demonstrates a **production-ready data engineering pipeline** that:
 
 ---
 
+## Dashboard
+
+### Market Overview
+Key metrics, daily performance summary, and color-coded stock performance table.
+
+![Market Overview](images/market_overview.png)
+
+### Stock Analysis
+Individual stock charts with candlestick visualization and volume analysis.
+
+![Stock Analysis](images/stock_analysis.png)
+
+### Portfolio Tracking
+Portfolio value over time, tracking $100 investment per stock.
+
+![Portfolio](images/portfolio.png)
+
+### Correlations
+Stock relationship heatmap and multi-stock comparison.
+
+![Correlations](images/correlations.png)
+
+---
+
 ## Architecture
 ```
 Alpha Vantage API
-      ↓
+      |
 Python ETL Script (Daily at 22:00 UTC)
-      ↓
+      |
 PostgreSQL Database
-      ↓
+      |
 Analytics Engine (Calculate Returns & Portfolio)
-      ↓
+      |
 Streamlit Dashboard (Real-time Visualization)
-      
+
 All orchestrated by Apache Airflow
 ```
+
+### Airflow DAG
+
+![Airflow DAG](images/airflow_dag_graph.png.PNG)
 
 ---
 
@@ -95,7 +117,7 @@ All orchestrated by Apache Airflow
 
 ---
 
-## Installation & Setup
+## Installation and Setup
 
 ### Prerequisites
 - Docker Desktop installed
@@ -105,36 +127,36 @@ All orchestrated by Apache Airflow
 
 1. **Clone the repository**
 ```bash
-   git clone https://github.com/YOUR_USERNAME/stock-market-analysis.git
-   cd stock-market-analysis
+git clone https://github.com/Vaheem/stock-market-analysis.git
+cd stock-market-analysis
 ```
 
 2. **Create environment file**
 ```bash
-   cp .env.example .env
+cp .env.example .env
 ```
 
 3. **Configure your `.env` file**
 ```env
-   POSTGRES_PASSWORD=your_strong_password
-   AIRFLOW_PASSWORD=your_strong_password
-   ALPHA_VANTAGE_API_KEY=your_api_key
+POSTGRES_PASSWORD=your_strong_password
+AIRFLOW_PASSWORD=your_strong_password
+ALPHA_VANTAGE_API_KEY=your_api_key
 ```
 
 4. **Start the application**
 ```bash
-   docker-compose up -d
+docker-compose up -d
 ```
 
 5. **Create Airflow admin user**
 ```bash
-   docker exec -it airflow_webserver airflow users create \
-     --username admin \
-     --firstname Admin \
-     --lastname User \
-     --role Admin \
-     --email admin@example.com \
-     --password YOUR_PASSWORD
+docker exec -it airflow_webserver airflow users create \
+  --username admin \
+  --firstname Admin \
+  --lastname User \
+  --role Admin \
+  --email admin@example.com \
+  --password YOUR_PASSWORD
 ```
 
 6. **Access the applications**
@@ -145,16 +167,16 @@ All orchestrated by Apache Airflow
 
 ## Database Schema
 
-### `stock_prices` (Fact Table)
+### stock_prices (Fact Table)
 Daily OHLC data for each stock
 
-### `stock_info` (Dimension Table)
+### stock_info (Dimension Table)
 Company information and market cap
 
-### `daily_returns` (Analytics)
+### daily_returns (Analytics)
 Calculated percentage returns
 
-### `portfolio_performance` (Aggregated)
+### portfolio_performance (Aggregated)
 Overall portfolio metrics
 
 ---
@@ -179,30 +201,6 @@ Overall portfolio metrics
 
 ---
 
-## Dashboard Features
-
-### Market Overview Tab
-- Average daily return across all stocks
-- Best and worst performing stocks
-- Total trading volume
-- Color-coded performance table
-
-### Stock Analysis Tab
-- Candlestick charts for price visualization
-- Volume analysis
-- Company information and market cap
-
-### Portfolio Tab
-- Portfolio value over time
-- Return on investment
-- Historical best/worst performers
-
-### Correlations Tab
-- Heatmap showing stock correlations
-- Multi-stock comparison charts
-
----
-
 ## License
 
 This project is open source and available under the MIT License.
@@ -211,18 +209,6 @@ This project is open source and available under the MIT License.
 
 ## Author
 
-**Your Name**
+**Vahe Eminyan**
 - GitHub: [@Vaheem](https://github.com/Vaheem)
-- LinkedIn: [vahe-eminyan](https://www.linkedin.com/in/vahe-eminyan-3719782a3/)
-
----
-
-## Acknowledgments
-
-- Data provided by [Alpha Vantage](https://www.alphavantage.co/)
-- Built with [Apache Airflow](https://airflow.apache.org/)
-- Visualized with [Streamlit](https://streamlit.io/)
-
----
-
-**If you find this project useful, please consider giving it a star!**
+- LinkedIn: [Vahe Eminyan](https://www.linkedin.com/in/vahe-eminyan-3719782a3/)
